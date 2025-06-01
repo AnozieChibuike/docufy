@@ -1,0 +1,11 @@
+LICENSE
+README.md
+pyproject.toml
+docufy/__init__.py
+docufy/generate_readme.py
+docufy.egg-info/PKG-INFO
+docufy.egg-info/SOURCES.txt
+docufy.egg-info/dependency_links.txt
+docufy.egg-info/entry_points.txt
+docufy.egg-info/requires.txt
+docufy.egg-info/top_level.txt

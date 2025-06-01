@@ -1,0 +1,28 @@
+# .readmeignore
+# Lines here work like .gitignore — they exclude files from README generation.
+
+# Ignore dependencies and build outputs
+node_modules/
+__pycache__/
+dist/
+build/
+.venv/
+.vscode/
+.idea/
+.mypy_cache/
+
+# Ignore secrets, logs, and environment files
+*.env
+.env.*
+*.log
+
+# Ignore git folder
+.git/
+
+# Ignore compiled files
+*.pyc
+*.min.js
+
+# Ignore tests or examples
+tests/
+examples/

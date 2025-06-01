@@ -1,0 +1,20 @@
+[project]
+name = "docufy"
+version = "1.2.0"
+description = "Generate a README from your project files using LLM"
+authors = [{ name = "Anozie Joel", email = "dev@0xagbero.pw" }]
+readme = "README.md"
+license = { text = "MIT" }
+dependencies = [
+    "google-generativeai>=0.4.1"
+]
+requires-python = ">=3.8"
+
+[project.scripts]
+docufy = "docufy.__init__:main"
+
+
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
