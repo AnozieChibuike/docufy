@@ -4,6 +4,7 @@ import argparse
 import os
 import google.generativeai as genai
 from .generate_readme import generate_readme
+from .utils import ensure_api_key, delete_api_key
 
 def main():
     parser = argparse.ArgumentParser(prog="docufy", description="Generate a README using Gemini Pro")
@@ -13,13 +14,15 @@ def main():
     parser.add_argument("--include", nargs="+", default=[".py", ".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs", ".json"], help="File extensions to include")
     parser.add_argument("--exclude", nargs="+", default=[], help="Files/folders to exclude")
     parser.add_argument("--model",type=str,default="gemini-2.0-flash", help="Name of the Gemini model to use (default: gemini-1.5-pro)")
+    parser.add_argument("--delete-key", action="store_true", help="Delete stored Gemini API key")
     
     args = parser.parse_args()
-    api_key = args.apikey or os.getenv("GEMINI_API_KEY")
-
-    if not api_key:
-        print("❌ Please provide Gemini API key via --apikey or GEMINI_API_KEY env var.")
+    
+    if args.delete_key:
+        delete_api_key()
         return
+
+    api_key = args.apikey or ensure_api_key()
 
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel(args.model)

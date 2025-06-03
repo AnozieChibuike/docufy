@@ -1,12 +1,13 @@
 [project]
 name = "docufy"
-version = "1.2.0"
+version = "1.2.2"
 description = "Generate a README from your project files using LLM"
 authors = [{ name = "Anozie Joel", email = "dev@0xagbero.pw" }]
 readme = "README.md"
 license = { text = "MIT" }
 dependencies = [
-    "google-generativeai>=0.4.1"
+    "google-generativeai>=0.4.1",
+    "python-dotenv>=1.0.0"
 ]
 requires-python = ">=3.8"
 

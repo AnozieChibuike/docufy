@@ -1,6 +1,8 @@
-# Docufy: Automated README Generation with Gemini Pro
+# Docufy: AI-Powered README Generator
 
-Docufy is a command-line tool designed to automatically generate comprehensive README files for your software projects using the power of Google's Gemini Pro model. It analyzes your project's source code and creates a well-structured README, saving you time and effort in documenting your work.
+## Description
+
+Docufy is a command-line tool that leverages the power of the Gemini Pro model to automatically generate comprehensive README files for your software projects. By analyzing your project's file structure and code, Docufy intelligently creates a well-structured README, including a project description, installation instructions, usage examples, features overview, and file structure summary.  It also supports excluding specific files and directories, and specifying file extensions to include.
 
 ## Installation
 
@@ -10,74 +12,88 @@ Docufy is a command-line tool designed to automatically generate comprehensive R
     pip install docufy
     ```
 
-2.  **Set up your Gemini API key:**
+    *Note: You might need to configure your `PYTHONPATH` if the script is not found after installation.*
 
-    You'll need a Google Gemini API key to use Docufy. You can provide it in one of two ways:
+2.  **Obtain a Gemini API Key:**
+    *   Go to the [Google AI Studio](https://makersuite.google.com/) and create an API key.
 
-    *   Using the `--apikey` flag when running Docufy.
-    *   Setting the `GEMINI_API_KEY` environment variable.
+3.  **Set the Gemini API Key:**
+
+    You can set the API Key using the `--apikey` argument or let `docufy` prompt you for it. The API Key will be stored securely in a `.env` file.
 
 ## Usage
 
-To generate a README for your project, run the following command:
+To generate a README file for your project, navigate to your project's root directory in the terminal and run:
 
 ```bash
-docufy --path <project_path> --out <output_path> --apikey <your_api_key>
+docufy --path . --out README.md
 ```
 
-*   `<project_path>`: The path to your project's root directory.
-*   `<output_path>`: The desired path for the generated README file (e.g., `README.md`). Defaults to `README.md` in the current directory if not provided.
-*   `<your_api_key>`: Your Google Gemini API key.
+*   `--path`: Specifies the path to your project directory. Defaults to the current directory (`.`).
+*   `--out`: Specifies the output file name for the generated README. Defaults to `README.md`.
+*   `--apikey`:  (Optional) Specifies your Gemini API key directly. If not provided, Docufy will prompt you for it and store it securely.
+*   `--include`: (Optional) Specifies a list of file extensions to include for analysis. Defaults to a common set of code extensions (`.py`, `.js`, `.jsx`, `.ts`, `.tsx`, `.mjs`, `.cjs`, `.json`).
+*   `--exclude`: (Optional) Specifies a list of files or directories to exclude from analysis.  Supports glob patterns for more flexible exclusion rules.
+*   `--model`: (Optional) Specifies the Gemini model to use. Defaults to `gemini-2.0-flash`.
+*   `--delete-key`: (Optional) Deletes the stored Gemini API key from the .env file.
 
-**Example:**
+**Examples:**
 
-```bash
-docufy --path my_project --out README.md --apikey AIzaSy...
-```
+*   Generate a README for the current directory:
 
-**Optional Arguments:**
+    ```bash
+    docufy --path .
+    ```
 
-*   `--include <extensions>`: Specify file extensions to include in the analysis (e.g., `.py`, `.js`). Defaults to `.py`.  Use multiple `--include` flags to include multiple extensions.
-*   `--exclude <files/folders>`:  Specify files or folders to exclude from the analysis (e.g., `__init__.py`, `tests/`).  Use multiple `--exclude` flags to exclude multiple files or folders.
-*   `--model <model_name>`: Specify the Gemini model to use. Defaults to `gemini-2.0-flash`.
+*   Generate a README with a specific output file name:
+
+    ```bash
+    docufy --path . --out my_project_readme.md
+    ```
+
+*   Exclude specific files and directories:
+
+    ```bash
+    docufy --path . --exclude "node_modules/" "*.log" ".DS_Store"
+    ```
+
+*   Include only Python and JavaScript files:
+
+    ```bash
+    docufy --path . --include ".py" ".js"
+    ```
+
+*   Delete the stored API key:
+    ```bash
+    docufy --delete-key
+    ```
 
 ## Features Overview
 
-*   **Automated README Generation:** Generates a comprehensive README file based on your project's source code.
-*   **Gemini Pro Integration:** Leverages the power of Google's Gemini Pro model for intelligent summarization and documentation.
-*   **Customizable Inclusion/Exclusion:**  Control which files and folders are included or excluded from the analysis.
-*   **.readmeignore Support:**  Uses a `.readmeignore` file (similar to `.gitignore`) to specify files and folders to exclude.
-*   **Clear and Concise Output:**  Generates a well-structured README in Markdown format.
+*   **Automated README Generation:**  Automatically creates a comprehensive README file based on your project's code.
+*   **AI-Powered Analysis:**  Uses the Gemini Pro model to understand your project's purpose and functionality.
+*   **Customizable:** Allows you to specify file extensions to include and files/directories to exclude.
+*   **Secure API Key Storage:** Securely stores your Gemini API key in a `.env` file (if not provided directly).
+*   **.readmeignore Support:**  Respects `.readmeignore` files for specifying files and directories to exclude from analysis, similar to `.gitignore`.
+*   **Text File Detection:** Only includes text-based files for analysis to avoid processing binary files.
 
-## File Structure Summary
+## File Structure
 
-*   `docufy/generate_readme.py`: Contains the core logic for generating the README file.  This file handles file processing, summarization using Gemini Pro, and output formatting.
-*   `docufy/__init__.py`:  Defines the command-line interface using `argparse` and orchestrates the README generation process.
-
-## Configuration
-
-### The `.readmeignore` File
-
-Docufy uses a `.readmeignore` file in your project's root directory to specify files and folders that should be excluded from the README generation process.  The `.readmeignore` file follows the same syntax as `.gitignore`.
-
-**Example `.readmeignore`:**
+The `docufy` package has the following structure:
 
 ```
-# Ignore dependency directories
-node_modules/
-.venv/
-
-# Ignore log files
-*.log
-
-# Ignore test files
-tests/
+docufy/
+├── __init__.py        # Package initialization and entry point
+├── ai_analysis.py   # Contains AI analysis functions (e.g., language detection)
+├── generate_readme.py  # Contains the main logic for generating the README
+├── utils.py           # Utility functions (e.g., API key handling, file type checking)
+└── .env               # (Optional) Stores the Gemini API key
 ```
-
-Docufy automatically creates a default `.readmeignore` file in your project's root directory if one doesn't exist.  This file includes common exclusions like dependency directories, build outputs, and log files. You can customize this file to refine your exclusions.
 
 ## Important Notes
 
-*   Ensure your Gemini API key is properly configured.
+*   **API Key Security:** The Gemini API key is stored in a `.env` file.  Ensure this file is not committed to version control (add it to your `.gitignore`).
+*   **Gemini Pro Usage:** Generating README files requires the Gemini Pro model, which may have usage limits or costs associated with it.  Refer to the Google AI Studio documentation for details.
+*   **Context Size Limit:** The tool limits the total code size sent to the Gemini model to avoid exceeding context window limits. If your project is very large, not all code may be included in the analysis. Consider using `--include` and `--exclude` to narrow down the code processed.
+*   **.readmeignore file:** You can create a `.readmeignore` file in your project root directory to specify files and directories that should be excluded from the README generation process. The format is the same as `.gitignore`.
 *   The quality of the generated README depends on the clarity and structure of your source code.
-*   Consider reviewing and editing the generated README to ensure accuracy and completeness.

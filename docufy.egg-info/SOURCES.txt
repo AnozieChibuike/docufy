@@ -2,7 +2,9 @@ LICENSE
 README.md
 pyproject.toml
 docufy/__init__.py
+docufy/ai_analysis.py
 docufy/generate_readme.py
+docufy/utils.py
 docufy.egg-info/PKG-INFO
 docufy.egg-info/SOURCES.txt
 docufy.egg-info/dependency_links.txt

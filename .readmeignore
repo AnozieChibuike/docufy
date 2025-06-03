@@ -1,5 +1,5 @@
 # .readmeignore
-# Lines here work like .gitignore — they exclude files from README generation.
+# Lines here work like .gitignore ï¿½ they exclude files from README generation.
 
 # Ignore dependencies and build outputs
 node_modules/
@@ -26,3 +26,5 @@ build/
 # Ignore tests or examples
 tests/
 examples/
+.mypy_cache/
+
