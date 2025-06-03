@@ -1,6 +1,6 @@
 [project]
 name = "docufy"
-version = "1.2.2"
+version = "1.3.2"
 description = "Generate a README from your project files using LLM"
 authors = [{ name = "Anozie Joel", email = "dev@0xagbero.pw" }]
 readme = "README.md"

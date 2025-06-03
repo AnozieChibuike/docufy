@@ -18,7 +18,7 @@ def is_text_file(filepath):
     # General programming languages
     '.py', '.js', '.ts', '.jsx', '.tsx', '.java', '.go', '.rb', '.php', '.cs',
     '.cpp', '.c', '.h', '.hpp', '.swift', '.kt', '.kts', '.rs', '.dart', '.scala',
-    '.lua', '.sh', '.bash', '.zsh', '.pl', '.r', '.m', '.jl', '.groovy',
+    '.lua', '.sh', '.bash', '.zsh', '.pl', '.r', '.m', '.jl', '.groovy','.sol',
 
     # Markup and templating
     '.html', '.htm', '.xml', '.xhtml', '.md', '.markdown', '.rst', '.adoc',

@@ -5,6 +5,58 @@ import glob
 from .utils import is_text_file
 from .ai_analysis import ai_suggest_framework
 
+DEFAULT_CODE_EXTENSIONS = [
+    # General programming languages
+    '.py', '.js', '.ts', '.jsx', '.tsx', '.java', '.go', '.rb', '.php', '.cs',
+    '.cpp', '.c', '.h', '.hpp', '.swift', '.kt', '.kts', '.rs', '.dart', '.scala',
+    '.lua', '.sh', '.bash', '.zsh', '.pl', '.r', '.m', '.jl', '.groovy','.sol',
+
+    # Markup and templating
+    '.html', '.htm', '.xml', '.xhtml', '.md', '.markdown', '.rst', '.adoc',
+    '.njk', '.ejs', '.hbs', '.pug', '.jade', '.twig',
+
+    # Config and environment files
+    '.json', '.yaml', '.yml', '.toml', '.ini', '.cfg', '.env', '.conf',
+
+    # Build & package management
+    '.gradle', '.pom', '.make', '.mk', '.cmake', '.bazel',
+
+    # Docker & DevOps
+    'dockerfile', '.dockerignore', '.compose', '.yml', '.yaml',
+
+    # CI/CD
+    '.gitlab-ci.yml', '.circleci/config.yml', '.travis.yml', 'Jenkinsfile',
+
+    # Scripts
+    '.bat', '.ps1', '.cmd',
+
+    # Data formats (readable)
+    '.csv', '.tsv',
+
+    # Web & frontend specific
+    '.vue', '.svelte', '.scss', '.sass', '.less', '.css',
+
+    # Notebooks (code + markdown)
+    '.ipynb',
+
+    # Type hint/stub files
+    '.pyi',
+
+    # Protobuf, Thrift, GraphQL
+    '.proto', '.thrift', '.graphql', '.gql',
+
+    # SQL and migrations
+    '.sql',
+
+    # Terraform
+    '.tf', '.tfvars',
+
+    # Assembly languages
+    '.asm', '.s',
+
+    # Misc
+    '.nix', '.bzl'
+]
 # Defaults
 DEFAULT_EXCLUDES = [
     "node_modules/",
@@ -42,9 +94,9 @@ def load_readmeignore(folder):
 
 
 def should_include_file(file_path, include_exts, excludes):
-    # Extension check
+    # Extension check (respects combined list now)
     if include_exts:
-        if not any(file_path.endswith(ext) for ext in include_exts):
+        if not any(file_path.lower().endswith(ext) for ext in include_exts):
             return False
     # Exclusion pattern check
     for pattern in excludes:
@@ -65,11 +117,17 @@ def collect_project_code(root_dir, include_exts, excludes):
             rel_path = os.path.relpath(os.path.join(dirpath, filename), root_dir)
             full_path = os.path.join(dirpath, filename)
 
-            if not should_include_file(rel_path, include_exts, excludes):  # skip based on .readmeignore
+            if not should_include_file(rel_path, include_exts, excludes):
                 continue
 
-            if not is_text_file(full_path):  # now the default filter
-                continue
+# Respect include_exts explicitly, or fall back to is_text_file
+            if include_exts:
+                if not any(rel_path.endswith(ext) for ext in include_exts):
+                    if not is_text_file(full_path):
+                        continue
+            else:
+                if not is_text_file(full_path):
+                    continue
 
             try:
                 with open(full_path, "r", encoding="utf-8", errors="ignore") as f:
@@ -117,9 +175,12 @@ def generate_readme(root_dir, model, output_path, include_exts=None, user_exclud
     # Load excludes from .readmeignore plus defaults and user excludes
     readmeignore_excludes = load_readmeignore(root_dir)
     excludes = set(DEFAULT_EXCLUDES + readmeignore_excludes + user_excludes)
+    
+    combined_exts = set(include_exts or []).union(DEFAULT_CODE_EXTENSIONS)
+    print(combined_exts)
 
     print("Collecting project code...")
-    project_code = collect_project_code(root_dir, include_exts, excludes)
+    project_code = collect_project_code(root_dir, combined_exts, excludes)
 
     if not project_code.strip():
         print("No code found to summarize.")
